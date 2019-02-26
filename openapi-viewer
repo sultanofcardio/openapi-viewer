@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source ~/.profile
+file="$(pwd)/$1"
+node "$SWAGGER_DIR/swagger.js" $file

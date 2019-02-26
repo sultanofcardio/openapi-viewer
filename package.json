@@ -1,0 +1,26 @@
+{
+  "name": "swagger",
+  "version": "1.0.0",
+  "description": "UI for OpenAPI files",
+  "main": "app.js",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "browserify-css": "^0.14.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "opn": "^5.4.0",
+    "swagger-ui": "^3.20.9",
+    "swagger-ui-dist": "^3.20.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "openapi",
+    "swagger",
+    "swagger-ui"
+  ],
+  "author": "sultanofcardio",
+  "license": "ISC"
+}
