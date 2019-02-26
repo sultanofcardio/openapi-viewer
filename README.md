@@ -5,6 +5,7 @@ You should have `npm` installed and in your `PATH`
 ```bash
 # clone the repo
 $ git clone https://github.com/sultanofcardio/openapi-viewer
+$ cd openapi-viewer
 
 # install the project
 $ chmod +x install && sudo ./install
