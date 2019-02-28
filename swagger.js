@@ -38,30 +38,77 @@ app.get('/apis/:file', (req, res) => {
     });
 });
 
-app.listen(port, () => console.log(`Listening on :${port}`));
+app.listen(port);
 
 if(args.length > 0){
     const opn = require('opn');
     const root = __dirname + '/apis';
     let path = args[0];
     let filename = path.split('/').pop();
-    let nameWithoutExtension = filename.split('.').slice(0, -1).join('.');
+    let fileExtension = filename.indexOf('.') === -1 ? "" : filename.split('.').pop();
+    let nameWithoutExtension = filename.indexOf('.') === -1 ? filename : filename.split('.').slice(0, -1).join('.');
     let url = `http://localhost:${port}/${nameWithoutExtension}`;
-    let finalPath = nPath.resolve(root + '/' + filename);
-    let resolvedPath = nPath.resolve(path);
+    let finalPath = nPath.resolve(`${root}/${filename}`);
 
-    if(!(resolvedPath === finalPath))
-        fs.copyFile(path, finalPath, () => {
-            process.on('SIGINT', function() {
-                fs.unlink(root + '/' + filename, () => process.exit());
+    // Catch CTRL + C event
+    process.on('SIGINT', function() {
+        if(fs.existsSync(finalPath)) {
+            fs.unlink(finalPath, () => process.exit());
+        } else process.exit();
+    });
+
+    if(fileExtension.toUpperCase() !== "JSON" && fileExtension.toUpperCase() !== "YAML"
+        && fileExtension.toUpperCase() !== "YML"){
+        console.log(`Invalid file type ${filename}`);
+        process.exit();
+    }
+
+    if(path.indexOf("http://") === 0 || path.indexOf("https://") === 0) {
+        // Remote file
+        const http = require('http');
+        const file = fs.createWriteStream(finalPath);
+        req = http.get(path,  response => {
+            const { statusCode } = response;
+
+            if(statusCode !== 200){
+                console.error(`Error: Unable to locate file ${path}.`);
+                if(fs.existsSync(finalPath)) {
+                    fs.unlink(finalPath, () => process.exit());
+                } else process.exit();
+            } else {
+                response.pipe(file);
+                file.on('finish', function() {
+                    file.close();
+                    console.log(`Opening ${url}`);
+                    opn(url);
+                });
+            }
+        }).on('error', e => {
+            console.error(`Error: Failed to load file ${filename}. ${e.message}`);
+            if(fs.existsSync(finalPath)) {
+                fs.unlink(finalPath, () => process.exit());
+            } else process.exit();
+        });
+
+        req.on('socket', socket => {
+            socket.setTimeout(10000); // Time out after 10 seconds
+            socket.on('timeout', () => req.abort());
+        })
+
+    } else {
+        // Local file
+
+        let resolvedPath = nPath.resolve(path);
+        if(!(resolvedPath === finalPath))
+            fs.copyFile(path, finalPath, () => {
+
+                console.log(`Opening ${url}`);
+                opn(url);
             });
-
+        else {
             console.log(`Opening ${url}`);
             opn(url);
-        });
-    else {
-        console.log(`Opening ${url}`);
-        opn(url);
+        }
     }
 }
 

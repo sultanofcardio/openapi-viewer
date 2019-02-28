@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
-source ~/.profile
-file="$(pwd)/$1"
-node "$SWAGGER_DIR/swagger.js" $file
+source ~/.profile > /dev/null 2>&1
+
+if [[ ! $1 =~ http://.* ]]
+then
+   file="$(pwd)/$1"
+else
+   file=${1}
+fi
+
+node "$SWAGGER_DIR/swagger.js" ${file}
