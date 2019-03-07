@@ -75,7 +75,7 @@ if(args.length > 0){
         // Remote file
         const http = require('http');
         const file = fs.createWriteStream(finalPath);
-        req = http.get(path,  response => {
+        let req = http.get(path,  response => {
             const { statusCode } = response;
 
             if(statusCode !== 200){
