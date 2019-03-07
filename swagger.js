@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+
+"use strict";
+
 const express = require('express');
 const fs = require('fs');
 const nPath = require('path');
@@ -39,6 +43,10 @@ app.get('/apis/:file', (req, res) => {
 });
 
 app.listen(port);
+
+if(!fs.existsSync(__dirname + '/apis')) {
+    fs.mkdirSync(__dirname + '/apis');
+}
 
 if(args.length > 0){
     const opn = require('opn');
@@ -93,7 +101,7 @@ if(args.length > 0){
         req.on('socket', socket => {
             socket.setTimeout(10000); // Time out after 10 seconds
             socket.on('timeout', () => req.abort());
-        })
+        });
 
     } else {
         // Local file
@@ -110,5 +118,8 @@ if(args.length > 0){
             opn(url);
         }
     }
+} else {
+    console.log("Usage: openapi-viewer <path_to_file>|<url>");
+    process.exit(1);
 }
 

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-npm install
-echo "export SWAGGER_DIR=\"$(pwd)\"" >> ~/.profile
-source ~/.profile
-sudo ln -s "$SWAGGER_DIR/openapi-viewer" /usr/bin/openapi-viewer

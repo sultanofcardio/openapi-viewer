@@ -1,18 +1,19 @@
 # OpenAPI Viewer
 
-You should have `npm` installed and in your `PATH`
+View an OpenAPI document in your browser with one command
+
+## Installation
 
 ```bash
-# clone the repo
-$ git clone https://github.com/sultanofcardio/openapi-viewer
-$ cd openapi-viewer
+$ npm install -g openapi-viewer
+```
 
-# install the project
-$ chmod +x install && sudo ./install
+## Usage
 
-# test it out
+You simple execute at the terminal
+```bash
+# ctrl + c to exit
 $ openapi-viewer petstore.json
 
-# ctrl + c to exit 
-
 ```
+
