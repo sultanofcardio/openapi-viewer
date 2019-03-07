@@ -73,7 +73,7 @@ if(args.length > 0){
 
     if(path.indexOf("http://") === 0 || path.indexOf("https://") === 0) {
         // Remote file
-        const http = require('http');
+        const http = /https:\/\//.test(path) ? require('https') : require('http');
         const file = fs.createWriteStream(finalPath);
         let req = http.get(path,  response => {
             const { statusCode } = response;
